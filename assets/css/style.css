@@ -1,0 +1,10 @@
+/* Tamaño imagen header */
+header img {
+    width: 50%;
+}
+
+/* Tamaño fuente footer */
+.tamaño {
+
+    font-size: 1.3rem;
+}
