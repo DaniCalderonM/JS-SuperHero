@@ -43,22 +43,43 @@ window.onload = function () {
                 url: `https://www.superheroapi.com/api.php/4905856019427443/${idSuperHero}`,
                 dataType: "json",
                 success: function (datos) {
-                    //Le asignamos datos.powerstats a datosGrafico para que nos
+                     //Le asignamos datos.powerstats a datosGrafico para que nos
                     //muestre sus valores posteriormente
                     let datosGrafico = datos.powerstats;
-                    //Mostramos en consola lo que nos devuelve datos
+                     //Mostramos en consola lo que nos devuelve datos
                     console.log("Success valor de datos obtenidos: ", datos);
                     //Mostramos en consola lo que nos devuelve datosGrafico
                     console.log("Success valor de datosGrafico obtenidos: ", datosGrafico);
+                    
+                    // Creamos la variable para saber si se encontraron datos en las powerstats
+                    let encontrarDatos = false;
                     //Creamos un for in para recorrer los datos de los powerstats
                     //y se lo añadimos a dataPoints con un .push
                     for (let resultado in datosGrafico) {
+                        //Creamos la variable numero para transformar a numero los datos
+                        //entregados en las powerstats
+                        let numero = parseInt(datosGrafico[resultado]);
+                        //Creamos la logica para verificar si el dato entregado es 
+                        //es un numero valido.
+                        if (!isNaN(numero)) {
+                            //Aqui indicamos si se encontraron datos, que se cree el grafico
+                            encontrarDatos = true; 
+                            dataPoints.push({
+                                label: resultado,
+                                y: numero
+                            });
+                        }
+                    }
+                    // Si no se encontraron datos, mostramos un mensaje distinto en el
+                    //label y le asignamos un valor cualquiera, en este caso un 1 al eje y,
+                    //para que nos muestre el grafico, ya que si ponemos 0, no nos dibuja nada.
+                    if (!encontrarDatos) {
                         dataPoints.push({
-                            label: resultado,
-                            y: parseInt(datosGrafico[resultado])
+                            label: "Dato no disponible",
+                            y: 1
                         });
                     }
-                    //Creamos el objeto que nos pide Canvas JS para hacer el grafico
+                 //Creamos el objeto que nos pide Canvas JS para hacer el grafico
                     let options = {
                         title: { text: `Estadísticas de Poder para ${datos.name}` },
                         data: [
@@ -68,7 +89,7 @@ window.onload = function () {
                             }
                         ]
                     };
-                    //Indicamos donde ira el grafico (#chartContainer) y llamamos a un
+                     //Indicamos donde ira el grafico (#chartContainer) y llamamos a un
                     //plugin externo para crear el grafico con los valores de options
                     $("#chartContainer").CanvasJSChart(options);
                     //Asignamos los valores a la CARD en el html
